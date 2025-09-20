@@ -65,6 +65,7 @@ final class UsuarioController {
         $codusuario = $params['codusuario'] ?? '';
         $email = $params['email'] ?? '';
         $nome = $params['nome'];
+        $senha = $params['senha'];
         
         if (!empty($codusuario)) {
             $response = $response
@@ -102,7 +103,6 @@ final class UsuarioController {
                     'data' => $result
                 ]
             ));
-            
         } else {
             $response = $response
             ->withHeader('Content-Type', 'application/json')
