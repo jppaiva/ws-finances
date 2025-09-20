@@ -64,19 +64,21 @@ final class UsuarioDAO extends Conexao
         return $result;
     }
 
-    public function getUsuariosByNome($nome)
+    public function getUsuariosByNome(string $nome): array
     {
         try {
             $sql = "SELECT CODUSUARIO, NOME, EMAIL
-            FROM usuario
-            WHERE NOME LIKE :NOME";
+                    FROM usuario
+                    WHERE NOME LIKE :NOME";
+
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindValue(':NOME', '%' . $nome . '%', PDO::PARAM_STR);
             $stmt->execute();
 
-            return $stmt->fetchAll(PDO::FETCH_ASSOC) ? : [];
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $result ?: [];
         } catch (PDOException $e) {
-            // Logar ou tratar erro
             return [];
         }
     }

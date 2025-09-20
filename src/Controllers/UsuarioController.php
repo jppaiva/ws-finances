@@ -14,6 +14,9 @@ final class UsuarioController
         $nome = $data['nome'] ?? '';
         $email = $data['email'] ?? '';
         $senha = $data['senha'] ?? '';
+
+        $response = $response->withHeader('Content-Type', 'application/json');
+
         if (empty($nome) || empty($email) || empty($senha)) {
             $response->getBody()->write(json_encode(
                 [
@@ -22,15 +25,14 @@ final class UsuarioController
                     'data' => $data
                 ]
             ));
-            return $response;
+            return $response->withStatus(400);
         }
 
         $usuarioDAO = new UsuarioDAO();
         $result = $usuarioDAO->cadastrarUsuario($data);
         $response->getBody()->write(json_encode($result));
-        return $response;
+        return $response->withStatus(200);
     }
-
 
     public function atualiza(Request $request, Response $response): Response
     {
@@ -41,6 +43,8 @@ final class UsuarioController
         $senha = $data['senha'] ?? '';
         $codusuario = $data['codusuario'] ?? '';
 
+        $response = $response->withHeader('Content-Type', 'application/json');
+
         if (empty($codusuario) || empty($nome) || empty($email) || empty($senha)) {
             $response->getBody()->write(json_encode(
                 [
@@ -49,14 +53,14 @@ final class UsuarioController
                     'data' => $data
                 ]
             ));
-            return $response;
+            return $response->withStatus(400);
         }
 
         $usuarioDAO = new UsuarioDAO();
         $result = $usuarioDAO->atualizaUsuario($data);
         $response->getBody()->write(json_encode($result));
 
-        return $response;
+        return $response->withStatus(200);
     }
 
     public function busca(Request $request, Response $response): Response
@@ -68,10 +72,9 @@ final class UsuarioController
         $email = $params['email'] ?? '';
         $nome = $params['nome'];
 
+        $response = $response->withHeader('Content-Type', 'application/json');
+
         if (!empty($codusuario)) {
-            $response = $response
-            ->withHeader('Content-Type', 'application/json')
-            ->withStatus(200);
             $result = $usuarioDAO->getUsuarioByCodUsuario($codusuario);
             $response->getBody()->write(json_encode(
                 [
@@ -80,34 +83,28 @@ final class UsuarioController
                     'data' => $result
                 ]
             ));
+            return $response->withStatus(200);
         } elseif (!empty($email)) {
-            $response = $response
-            ->withHeader('Content-Type', 'application/json')
-            ->withStatus(200);
             $result = $usuarioDAO->getUsuarioByEmail($email);
-            $response = $response->getBody()->write(json_encode(
+            $response->getBody()->write(json_encode(
                 [
                     'error' => false,
                     'message' => count($result) > 0 ? 'Registro encontrado' : 'Nenhum registro encontrado',
                     'data' => $result
                 ]
             ));
+            return $response->withStatus(200);
         } elseif (isset($nome)) {
-            $response = $response
-            ->withHeader('Content-Type', 'application/json')
-            ->withStatus(200);
             $result = $usuarioDAO->getUsuariosByNome($nome);
-            $response = $response->getBody()->write(json_encode(
+            $response->getBody()->write(json_encode(
                 [
                     'error' => false,
                     'message' => count($result) > 0 ? 'Registros encontrados' : 'Nenhum registro encontrado',
                     'data' => $result
                 ]
             ));
+            return $response->withStatus(200);
         } else {
-            $response = $response
-            ->withHeader('Content-Type', 'application/json')
-            ->withStatus(400);
             $response->getBody()->write(json_encode(
                 [
                     'error' => true,
@@ -115,19 +112,18 @@ final class UsuarioController
                     'data' => []
                 ]
             ));
+            return $response->withStatus(400);
         }
-        return $response;
     }
 
-    public function excluir(Request $request, Response $response): Response
+    public function exclui(Request $request, Response $response): Response
     {
         $params = $request->getQueryParams();
         $codusuario = $params['codusuario'] ?? '';
 
+        $response = $response->withHeader('Content-Type', 'application/json');
+
         if (empty($codusuario)) {
-            $response = $response
-            ->withHeader('Content-Type', 'application/json')
-            ->withStatus(400);
             $response->getBody()->write(json_encode(
                 [
                     'error' => true,
@@ -136,15 +132,12 @@ final class UsuarioController
                 ]
             ));
 
-            return $response;
+            return $response->withStatus(400);
         }
 
-        $response = $response
-        ->withHeader('Content-Type', 'application/json')
-        ->withStatus(200);
         $usuarioDAO = new UsuarioDAO();
         $result = $usuarioDAO->deleteUsuario($codusuario);
         $response->getBody()->write(json_encode($result));
-        return $response;
+        return $response->withStatus(200);
     }
 }

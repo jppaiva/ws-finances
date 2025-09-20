@@ -15,8 +15,12 @@ return function (App $app) {
     });
     
     $app->get('/usuario', [UsuarioController::class, 'busca']);
+    $app->post('/usuario', [UsuarioController::class, 'cadastra']);
+    $app->put('/usuario', [UsuarioController::class, 'atualiza']);
+    $app->delete('/usuario', [UsuarioController::class, 'exclui']);
 
-    $app->get('/login', [AuthController::class, 'login']);
+    $app->post('/login', [AuthController::class, 'login']);
+    $app->put('/logoff', [AuthController::class, 'logoff']);
     
     $app->any('/{routes:.+}', function (Request $request, Response $response) {
         $response->getBody()->write('Rota não existe!');
