@@ -18,7 +18,7 @@ final class UsuarioDAO extends Conexao {
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':NOME', $data['nome'], PDO::PARAM_STR);
         $stmt->bindValue(':EMAIL', $data['email'], PDO::PARAM_STR);
-        $stmt->bindValue(':SENHA', md5($data['senha']), PDO::PARAM_STR);
+        $stmt->bindValue(':SENHA', password_hash($data['senha'], PASSWORD_DEFAULT), PDO::PARAM_STR);
         $stmt->execute();
         $codusuario = $this->pdo->lastInsertId();
         if ($codusuario > 0) {

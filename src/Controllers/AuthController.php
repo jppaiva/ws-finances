@@ -22,17 +22,18 @@ final class AuthController {
                     'data' => $data
                 ]
             ));
-            return $response;
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
         }
 
         $usuarioDAO = new UsuarioDAO();
         $result = $usuarioDAO->getUsuarioByEmail($email);
 
         try {
-            if (empty($result)) {
+            // Verifica se retornou algum registro
+            if (!empty($result)) {
                 $usuario = $result[0];
                 // Verifica senha   
-                if ($usuario['SENHA'] == md5($senha)) {
+                if (password_verify($senha, $usuario['SENHA'])) {
                     // 3. Criar payload do JWT
                     $payload = [
                         'iat' => time(),                   // timestamp atual
@@ -58,16 +59,17 @@ final class AuthController {
                             ]
                         ]
                     ));
-                    return $response;
+                    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
                 } else {
-                        $response->getBody()->write(json_encode(
-                            [
-                                'error' => true,
-                                'message' => 'Senha incorreta',
-                                'data' => $data
-                            ]
-                        ));
-                        return $response;
+                    $response->getBody()->write(json_encode(
+                        [
+                            'error' => true,
+                            'message' => 'Senha incorreta',
+                            'data' => $data
+                        ]
+                    ));
+
+                    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
                 }
             } else {
                 $response->getBody()->write(json_encode(
@@ -77,7 +79,7 @@ final class AuthController {
                         'data' => $data
                     ]
                 ));
-                return $response;
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
             }
         } catch (\Exception $e) {
             $response->getBody()->write(json_encode(
@@ -87,7 +89,7 @@ final class AuthController {
                     'data' => []
                 ]
             ));
-            return $response;
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
         }
 
         return $response;
