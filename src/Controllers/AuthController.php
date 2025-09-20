@@ -83,7 +83,7 @@ final class AuthController {
             $response->getBody()->write(json_encode(
                 [
                     'error' => true,
-                    'message' => 'Erro ao realizar login',
+                    'message' => 'Erro ao realizar login. Erro: ' . $e->getMessage(),
                     'data' => []
                 ]
             ));
