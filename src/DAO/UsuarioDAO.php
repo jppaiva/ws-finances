@@ -4,6 +4,8 @@ namespace App\DAO;
 
 use PDO;
 use PDOException;
+use PhpParser\Node\Expr\Throw_;
+use PhpParser\Node\Stmt\Return_;
 
 final class UsuarioDAO extends Conexao {
 
@@ -59,10 +61,13 @@ final class UsuarioDAO extends Conexao {
         return $result;
     }
 
-    public function getUsuarios() {
+    public function getUsuariosByNome($nome) {
         try {
-            $sql = "SELECT CODUSUARIO, NOME, EMAIL FROM usuario";
+            $sql = "SELECT CODUSUARIO, NOME, EMAIL 
+            FROM usuario 
+            WHERE NOME LIKE :NOME";
             $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':NOME', '%' . $nome . '%', PDO::PARAM_STR);
             $stmt->execute();
             
             return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
@@ -101,6 +106,35 @@ final class UsuarioDAO extends Conexao {
         } catch (PDOException $e) {
             // Logar ou tratar erro
             return [];
+        }
+    }
+
+    public function deleteUsuario($codusuario) {
+        try {
+            $sql = "UPDATE USUARIO SET EXCLUIDO = 1 WHERE CODUSUARIO = :CODUSUARIO";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':CODUSUARIO', $codusuario, PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                 return array(
+                    'error' => false, 
+                    'message' => 'Usuário excluído com sucesso', 
+                    'data' => []
+                );
+            } else {
+                return array(
+                    'error' => true, 
+                    'message' => 'Falha ao excluir, usuário inexistente', 
+                    'data' => []
+                );
+            }
+           
+        } catch (PDOException $e) {
+            return array(
+                'error' => true, 
+                'message' => 'Erro ao excluir usuário. erro: ' . $e->getMessage(), 
+                'data' => []
+            );
         }
     }
 } 
