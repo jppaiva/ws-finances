@@ -16,8 +16,8 @@ abstract class Conexao
     {
         try {
             $this->pdo = new PDO(
-                'mysql:host=localhost;dbname=finances', 
-                'root', 
+                'mysql:host=localhost;dbname=finances',
+                'root',
                 '',
                 [
                     PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES UTF8, lc_time_names = 'pt_BR'",

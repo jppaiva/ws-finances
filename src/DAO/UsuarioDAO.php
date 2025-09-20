@@ -25,8 +25,8 @@ final class UsuarioDAO extends Conexao
         $codusuario = $this->pdo->lastInsertId();
         if ($codusuario > 0) {
             $result = [
-                'error' => false, 
-                'message' => 'Usuário cadastrado com sucesso', 
+                'error' => false,
+                'message' => 'Usuário cadastrado com sucesso',
                 'data' => ['codusuario' => $codusuario]
             ];
         } else {
@@ -60,7 +60,7 @@ final class UsuarioDAO extends Conexao
                 'data' => []
             ];
         }
-        
+
         return $result;
     }
 
