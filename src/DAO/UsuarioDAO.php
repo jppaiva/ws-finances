@@ -23,19 +23,18 @@ final class UsuarioDAO extends Conexao
         $stmt->bindValue(':SENHA', password_hash($data['senha'], PASSWORD_DEFAULT), PDO::PARAM_STR);
         $stmt->execute();
         $codusuario = $this->pdo->lastInsertId();
-        if ($codusuario > 0)
-        {
-            $result = array(
+        if ($codusuario > 0) {
+            $result = [
                 'error' => false, 
                 'message' => 'Usuário cadastrado com sucesso', 
-                'data' => array('codusuario' => $codusuario)
-            );
+                'data' => ['codusuario' => $codusuario]
+            ];
         } else {
-            $result = array(
+            $result = [
                 'error' => true,
                 'message' => 'Erro ao cadastrar usuário',
                 'data' => []
-            );
+            ];
         }
         return $result;
     }
@@ -49,17 +48,17 @@ final class UsuarioDAO extends Conexao
         $stmt->bindValue(':SENHA', md5($data['senha']), PDO::PARAM_STR);
         $stmt->bindValue(':CODUSUARIO', $data['codusuario'], PDO::PARAM_INT);
         if ($stmt->execute()) {
-            $result = array(
+            $result = [
                 'error' => false,
                 'message' => 'Usuário atualizado com sucesso',
                 'data' => []
-            );
+            ];
         } else {
-            $result = array(
+            $result = [
                 'error' => true,
                 'message' => 'Erro ao atualizar usuário',
                 'data' => []
-            );
+            ];
         }
         
         return $result;
@@ -75,7 +74,7 @@ final class UsuarioDAO extends Conexao
             $stmt->bindValue(':NOME', '%' . $nome . '%', PDO::PARAM_STR);
             $stmt->execute();
 
-            return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+            return $stmt->fetchAll(PDO::FETCH_ASSOC) ? : [];
         } catch (PDOException $e) {
             // Logar ou tratar erro
             return [];
@@ -124,25 +123,24 @@ final class UsuarioDAO extends Conexao
             $stmt->bindValue(':CODUSUARIO', $codusuario, PDO::PARAM_INT);
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
-                 return array(
+                return [
                     'error' => false,
                     'message' => 'Usuário excluído com sucesso',
                     'data' => []
-                );
-            } else 
-            {
-                return array(
+                ];
+            } else {
+                return [
                     'error' => true,
                     'message' => 'Falha ao excluir, usuário inexistente',
                     'data' => []
-                );
+                ];
             }
         } catch (PDOException $e) {
-            return array(
+            return [
                 'error' => true,
                 'message' => 'Erro ao excluir usuário. erro: ' . $e->getMessage(),
                 'data' => []
-            );
+            ];
         }
     }
 }
