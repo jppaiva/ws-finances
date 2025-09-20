@@ -11,9 +11,14 @@ abstract class Conexao {
      */
     protected $pdo;
 
-    public function __construct() {
-        try {
-            $this->pdo = new PDO('mysql:host=localhost;dbname=finances', 'root', '',
+    public function __construct() 
+    {
+        try 
+        {
+            $this->pdo = new PDO(
+                'mysql:host=localhost;dbname=finances', 
+                'root', 
+                '',
             array(
                 PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES UTF8, lc_time_names = 'pt_BR'",
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -24,7 +29,9 @@ abstract class Conexao {
                 )
             );
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
+        } 
+        catch (PDOException $e) 
+        {
             echo '<pre>';
             print_r($e);
             echo '<pre>';

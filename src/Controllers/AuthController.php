@@ -7,7 +7,8 @@ use Firebase\JWT\JWT;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Psr7\Response as Response;
 
-final class AuthController {
+final class AuthController 
+{
     public function login(Request $request, Response $response, $args): Response
     {
         $data = $request->getParsedBody();
