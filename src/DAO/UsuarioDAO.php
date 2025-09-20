@@ -67,8 +67,7 @@ final class UsuarioDAO extends Conexao
 
     public function getUsuariosByNome($nome)
     {
-        try
-        {
+        try {
             $sql = "SELECT CODUSUARIO, NOME, EMAIL
             FROM usuario
             WHERE NOME LIKE :NOME";
@@ -77,8 +76,7 @@ final class UsuarioDAO extends Conexao
             $stmt->execute();
 
             return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-        } catch (PDOException $e)
-        {
+        } catch (PDOException $e) {
             // Logar ou tratar erro
             return [];
         }
@@ -86,8 +84,7 @@ final class UsuarioDAO extends Conexao
 
     public function getUsuarioByEmail($email)
     {
-        try
-        {
+        try {
             $sql = "SELECT CODUSUARIO, NOME, EMAIL, SENHA
             FROM usuario
             WHERE EMAIL = :EMAIL";
@@ -96,8 +93,7 @@ final class UsuarioDAO extends Conexao
             $stmt->execute();
 
             return $stmt->fetch(PDO::FETCH_ASSOC) ? : [];
-        } catch (PDOException $e)
-        {
+        } catch (PDOException $e) {
             // Logar ou tratar erro
             return [];
         }
@@ -105,8 +101,7 @@ final class UsuarioDAO extends Conexao
 
     public function getUsuarioByCodUsuario($codusuario)
     {
-        try
-        {
+        try {
             $sql = "SELECT CODUSUARIO, NOME, EMAIL, SENHA
             FROM usuario
             WHERE EMAIL = :CODUSUARIO";
@@ -115,8 +110,7 @@ final class UsuarioDAO extends Conexao
             $stmt->execute();
 
             return $stmt->fetch(PDO::FETCH_ASSOC) ? : [];
-        } catch (PDOException $e)
-        {
+        } catch (PDOException $e) {
             // Logar ou tratar erro
             return [];
         }
@@ -124,8 +118,7 @@ final class UsuarioDAO extends Conexao
 
     public function deleteUsuario($codusuario)
     {
-        try
-        {
+        try {
             $sql = "UPDATE USUARIO SET EXCLUIDO = 1 WHERE CODUSUARIO = :CODUSUARIO";
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindValue(':CODUSUARIO', $codusuario, PDO::PARAM_INT);
@@ -144,8 +137,7 @@ final class UsuarioDAO extends Conexao
                     'data' => []
                 );
             }
-        } catch (PDOException $e)
-        {
+        } catch (PDOException $e) {
             return array(
                 'error' => true,
                 'message' => 'Erro ao excluir usuário. erro: ' . $e->getMessage(),
