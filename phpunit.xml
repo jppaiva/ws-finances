@@ -14,10 +14,6 @@
     stopOnFailure="false"
     bootstrap="tests/bootstrap.php"
 >
-    <testsuites>
-        <testsuite name="Test Suite">
-        </testsuite>
-    </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src/</directory>
