@@ -8,9 +8,9 @@ use PDOException;
 abstract class Conexao
 {
     /**
-     * @var PDO
+     * @var PDO|null
      */
-    protected $pdo;
+    protected ?PDO $pdo = null;
 
     public function __construct()
     {
