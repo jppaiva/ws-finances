@@ -146,5 +146,5 @@ final class UsuarioController
         $result = $usuarioDAO->deleteUsuario($codusuario);
         $response->getBody()->write(json_encode($result));
         return $response;
-    }   
+    }
 }

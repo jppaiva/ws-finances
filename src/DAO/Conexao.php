@@ -5,19 +5,20 @@ namespace App\DAO;
 use PDO;
 use PDOException;
 
-abstract class Conexao {
+abstract class Conexao
+{
     /**
      * @var PDO
      */
     protected $pdo;
 
-    public function __construct() 
+    public function __construct()
     {
-        try 
+        try
         {
             $this->pdo = new PDO(
-                'mysql:host=localhost;dbname=finances', 
-                'root', 
+                'mysql:host=localhost;dbname=finances',
+                'root',
                 '',
             array(
                 PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES UTF8, lc_time_names = 'pt_BR'",
@@ -29,8 +30,7 @@ abstract class Conexao {
                 )
             );
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } 
-        catch (PDOException $e) 
+        } catch (PDOException $e)
         {
             echo '<pre>';
             print_r($e);
