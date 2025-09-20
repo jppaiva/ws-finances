@@ -85,7 +85,7 @@ final class UsuarioController
             ->withHeader('Content-Type', 'application/json')
             ->withStatus(200);
             $result = $usuarioDAO->getUsuarioByEmail($email);
-            $response->getBody()->write(json_encode(
+            $response = $response->getBody()->write(json_encode(
                 [
                     'error' => false,
                     'message' => count($result) > 0 ? 'Registro encontrado' : 'Nenhum registro encontrado',
