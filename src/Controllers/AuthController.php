@@ -14,89 +14,78 @@ final class AuthController {
         $email = $data['email'] ?? '';
         $senha = $data['senha'] ?? '';
 
+        // Caso e-mail ou senha não sejam informados
         if (empty($email) || empty($senha)) {
-            $response->getBody()->write(json_encode(
-                [
-                    'error' => true,
-                    'message' => 'Usuário e senha devem ser informados.',
-                    'data' => $data
-                ]
-            ));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+            return $this->jsonResponse($response, [
+                'error' => true,
+                'message' => 'Usuário e senha devem ser informados.',
+                'data' => []
+            ], 400);
         }
 
         $usuarioDAO = new UsuarioDAO();
         $result = $usuarioDAO->getUsuarioByEmail($email);
 
         try {
-            // Verifica se retornou algum registro
             if (!empty($result)) {
                 $usuario = $result[0];
-                // Verifica senha   
+
                 if (password_verify($senha, $usuario['SENHA'])) {
-                    // 3. Criar payload do JWT
+                    // Criar payload do JWT
                     $payload = [
-                        'iat' => time(),                   // timestamp atual
-                        'exp' => time() + 3600,            // expira em 1 hora
-                        'sub' => $usuario['CODUSUARIO'],   // id do usuário
+                        'iat' => time(),                   
+                        'exp' => time() + 3600,            
+                        'sub' => $usuario['CODUSUARIO'],   
                         'email' => $usuario['EMAIL']
                     ];
 
-                    $secretKey = 'SUA_CHAVE_SECRETA_AQUI';
+                    // Melhor armazenar em variável de ambiente (.env)
+                    $secretKey = $_ENV['JWT_SECRET'];
                     $jwt = JWT::encode($payload, $secretKey, 'HS256');
 
-                    $response->getBody()->write(json_encode(
-                        [
-                            'error' => false,
-                            'message' => 'Login realizado com sucesso',
-                            'data' => [
-                                'token' => $jwt,
-                                'usuario' => [
-                                    'CODUSUARIO' => $usuario['CODUSUARIO'],
-                                    'NOME' => $usuario['NOME'],
-                                    'EMAIL' => $usuario['EMAIL']
-                                ]
+                    return $this->jsonResponse($response, [
+                        'error' => false,
+                        'message' => 'Login realizado com sucesso',
+                        'data' => [
+                            'token' => $jwt,
+                            'usuario' => [
+                                'CODUSUARIO' => $usuario['CODUSUARIO'],
+                                'NOME' => $usuario['NOME'],
+                                'EMAIL' => $usuario['EMAIL']
                             ]
                         ]
-                    ));
-                    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+                    ], 200);
                 } else {
-                    $response->getBody()->write(json_encode(
-                        [
-                            'error' => true,
-                            'message' => 'Senha incorreta',
-                            'data' => $data
-                        ]
-                    ));
-
-                    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+                    return $this->jsonResponse($response, [
+                        'error' => true,
+                        'message' => 'Senha incorreta',
+                        'data' => []
+                    ], 401);
                 }
             } else {
-                $response->getBody()->write(json_encode(
-                    [
-                        'error' => true,
-                        'message' => 'Usuário não encontrado',
-                        'data' => $data
-                    ]
-                ));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+                return $this->jsonResponse($response, [
+                    'error' => true,
+                    'message' => 'Usuário não encontrado',
+                    'data' => []
+                ], 404);
             }
         } catch (\Exception $e) {
-            $response->getBody()->write(json_encode(
-                [
-                    'error' => true,
-                    'message' => 'Erro ao realizar login. Erro: ' . $e->getMessage(),
-                    'data' => []
-                ]
-            ));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+            return $this->jsonResponse($response, [
+                'error' => true,
+                'message' => 'Erro ao realizar login. Erro: ' . $e->getMessage(),
+                'data' => []
+            ], 500);
         }
-
-        return $response;
     }
 
     public function logout(Request $request, Response $response, $args): Response
     {
         return $response;
+    }
+
+    private function jsonResponse(Response $response, array $data, int $status = 200): Response
+    {
+        $response->getBody()->write(json_encode($data));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
     }
 }
