@@ -7,7 +7,7 @@ use Firebase\JWT\JWT;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Psr7\Response as Response;
 
-final class AuthController 
+final class AuthController
 {
     public function login(Request $request, Response $response, $args): Response
     {
@@ -34,9 +34,9 @@ final class AuthController
                 if (password_verify($senha, $usuario['SENHA'])) {
                     // Criar payload do JWT
                     $payload = [
-                        'iat' => time(),                   
-                        'exp' => time() + 3600,            
-                        'sub' => $usuario['CODUSUARIO'],   
+                        'iat' => time(),
+                        'exp' => time() + 3600,
+                        'sub' => $usuario['CODUSUARIO'],
                         'email' => $usuario['EMAIL']
                     ];
 

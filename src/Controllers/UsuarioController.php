@@ -6,7 +6,8 @@ use App\DAO\UsuarioDAO;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Psr7\Response as Response;
 
-final class UsuarioController {
+final class UsuarioController
+{
     public function cadastra(Request $request, Response $response): Response
     {
         $data = $request->getParsedBody();
@@ -58,15 +59,15 @@ final class UsuarioController {
         return $response;
     }
 
-    public function busca(Request $request, Response $response): Response {
+    public function busca(Request $request, Response $response): Response
+    {
         $usuarioDAO = new UsuarioDAO();
         $params = $request->getQueryParams();
         // Parametros
         $codusuario = $params['codusuario'] ?? '';
         $email = $params['email'] ?? '';
         $nome = $params['nome'];
-        $senha = $params['senha'];
-        
+
         if (!empty($codusuario)) {
             $response = $response
             ->withHeader('Content-Type', 'application/json')
@@ -75,11 +76,11 @@ final class UsuarioController {
             $response->getBody()->write(json_encode(
                 [
                     'error' => false,
-                    'message' => count($result) > 0 ? 'Registro encontrado': 'Nenhum registro encontrado',
+                    'message' => count($result) > 0 ? 'Registro encontrado' : 'Nenhum registro encontrado',
                     'data' => $result
                 ]
             ));
-        } else if (!empty($email)) {
+        } elseif (!empty($email)) {
             $response = $response
             ->withHeader('Content-Type', 'application/json')
             ->withStatus(200);
@@ -87,11 +88,11 @@ final class UsuarioController {
             $response->getBody()->write(json_encode(
                 [
                     'error' => false,
-                    'message' => count($result) > 0 ? 'Registro encontrado': 'Nenhum registro encontrado',
+                    'message' => count($result) > 0 ? 'Registro encontrado' : 'Nenhum registro encontrado',
                     'data' => $result
                 ]
             ));
-        } else if (isset($nome)) {
+        } elseif (isset($nome)) {
             $response = $response
             ->withHeader('Content-Type', 'application/json')
             ->withStatus(200);
@@ -99,7 +100,7 @@ final class UsuarioController {
             $response = $response->getBody()->write(json_encode(
                 [
                     'error' => false,
-                    'message' => count($result) > 0 ? 'Registros encontrados': 'Nenhum registro encontrado',
+                    'message' => count($result) > 0 ? 'Registros encontrados' : 'Nenhum registro encontrado',
                     'data' => $result
                 ]
             ));
@@ -118,7 +119,8 @@ final class UsuarioController {
         return $response;
     }
 
-    public function excluir(Request $request, Response $response): Response {
+    public function excluir(Request $request, Response $response): Response
+    {
         $params = $request->getQueryParams();
         $codusuario = $params['codusuario'] ?? '';
 
